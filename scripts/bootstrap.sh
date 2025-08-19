@@ -26,17 +26,60 @@ article{background:var(--card);padding:18px;border-radius:12px}
 CSS
 fi
 
+if [ ! -f assets/app.js ]; then
+  cat > assets/app.js <<'JS'
+(function(){
+  const y = document.getElementById('y');
+  if (y) y.textContent = new Date().getFullYear();
+
+  const empty = document.getElementById('empty');
+  const ul = document.getElementById('post-list');
+
+  async function loadPosts(){
+    try{
+      const r = await fetch('posts.json', {cache:'no-store'});
+      if(!r.ok) throw new Error('posts.json missing');
+      const posts = await r.json();
+      if(!posts.length){ if (empty) empty.style.display='block'; return; }
+      posts.sort((a,b)=> a.date < b.date ? 1 : -1);
+      if (ul) {
+        ul.innerHTML = posts.map(p =>
+          `<li><a href="posts/${p.slug}.html">${p.title}</a><span class="date">${p.date}</span></li>`
+        ).join('');
+      }
+    }catch(e){
+      if (empty) empty.style.display='block';
+      console.warn(e);
+    }
+  }
+  loadPosts();
+})();
+JS
+fi
+
 if [ ! -f index.html ]; then
   cat > index.html <<'HTML'
-<!doctype html><html lang="fr"><head><meta charset="utf-8"/><title>Carnet des Réponses</title><meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/></head>
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <title>Carnet des Réponses</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link rel="stylesheet" href="assets/style.css"/>
+  <script src="assets/app.js" defer></script>
+</head>
 <body>
-<header class="wrap"><h1>Carnet des Réponses</h1><p class="sub">Des Q/R utiles, publiées simplement.</p></header>
-<main class="wrap"><h2>Derniers billets</h2><ul id="post-list" class="posts"></ul><p id="empty" class="muted" style="display:none">Aucun billet pour l’instant.</p></main>
-<footer class="wrap muted"><p>© <span id="y"></span> Carnet des Réponses</p></footer>
-<script>
-document.getElementById('y').textContent=new Date().getFullYear();
-(async()=>{try{const r=await fetch('posts.json',{cache:'no-store'});if(!r.ok)throw 0;const p=await r.json();const ul=document.getElementById('post-list');if(!p.length){document.getElementById('empty').style.display='block';return}p.sort((a,b)=>a.date<b.date?1:-1);ul.innerHTML=p.map(x=>`<li><a href="posts/${x.slug}.html">${x.title}</a><span class="date">${x.date}</span></li>`).join('')}catch(e){document.getElementById('empty').style.display='block'}})();
-</script>
-</body></html>
+  <header class="wrap">
+    <h1>Carnet des Réponses</h1>
+    <p class="sub">Des Q/R utiles, publiées simplement.</p>
+  </header>
+  <main class="wrap">
+    <h2>Derniers billets</h2>
+    <ul id="post-list" class="posts"></ul>
+    <p id="empty" class="muted" style="display:none">Aucun billet pour l’instant.</p>
+  </main>
+  <footer class="wrap muted"><p>© <span id="y"></span> Carnet des Réponses</p></footer>
+</body>
+</html>
 HTML
 fi
