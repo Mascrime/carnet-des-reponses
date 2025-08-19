@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Power BI Dataflow Migration & Duplication Strategies — Carnet des Réponses</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="../assets/style.css" />
+  <meta name="description" content="Learn two key methods for managing Power BI dataflows: manual copy-paste for initial setup, and efficient export/import for duplication, migration, and CI/CD. Optimize your workflow."/>
+</head>
+<body>
+  <main class="wrap">
+    <a class="back" href="../index.html">← Retour</a>
+    <h1>Power BI Dataflow Migration & Duplication Strategies</h1>
+    <p class="muted">Publié le 2025-08-19</p>
+    <article>
+      <h3>Workflow: Create Your "Master" Dataflow</h3>
+<p>First, build the complete dataflow in the Power BI Service with all your queries, functions, and parameters (using <strong>Method 1: Manual Copy &amp; Paste</strong>).</p>
+<h3>Export the JSON Model</h3>
+<p>In your workspace, find the completed dataflow. Click the ellipsis (...) next to the dataflow name and select "Export .json". This will download a <code>model.json</code> file that contains the M code for all queries and the entire structure of your dataflow.</p>
+<h3>Import to Create a New Dataflow</h3>
+<p>Go to the workspace where you want the new dataflow (it can be the same or a different one). Click "New" -&gt; "Dataflow". At the top of the "Add new tables" screen, you will see an "Import model" link. Click it. Select the <code>model.json</code> file you just downloaded. Done! Power BI will instantly create a new dataflow with all the queries, folders, and parameters from your exported file. You will just need to configure the credentials and schedule the refresh.</p>
+<h3>Summary &amp; Recommendation</h3>
+<p>Here's a breakdown of recommended methods for different dataflow management tasks:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Task</th>
+<th style="text-align: left;">Recommended Method</th>
+<th style="text-align: left;">Why?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Initial migration from a .pbix file to your first Dataflow</td>
+<td style="text-align: left;"><strong>Method 1: Manual Copy &amp; Paste</strong></td>
+<td style="text-align: left;">It's the only direct way. It's tedious but ensures a 1-to-1 transfer of your logic.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Duplicating an existing Dataflow or creating a template</td>
+<td style="text-align: left;"><strong>Method 2: Import/Export Model</strong></td>
+<td style="text-align: left;">This is the true "all at once" solution for replicating dataflows, saving immense amounts of time.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Moving a Dataflow from a Dev to a Prod workspace</td>
+<td style="text-align: left;"><strong>Method 2: Import/Export Model</strong></td>
+<td style="text-align: left;">This is the standard best practice for CI/CD (Continuous Integration/Deployment) with dataflows.</td>
+</tr>
+</tbody>
+</table>
+<p>So, for your initial task, you'll need to use the manual copy-and-paste method. It's a one-time effort, and once it's done, you can use the much faster Import/Export method for any future needs.</p>
+    </article>
+  </main>
+</body>
+</html>
