@@ -1,0 +1,60 @@
+name: Deploy Hugo (Ananke)
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Go (for Hugo Modules)
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          cache: false
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.128.0'  # extended
+
+      - name: Init & tidy Hugo modules
+        run: |
+          if [ ! -f go.mod ]; then
+            hugo mod init github.com/${{ github.repository }}
+          fi
+          hugo mod tidy
+          hugo mod vendor
+          hugo mod graph || true
+
+      - name: Build
+        env:
+          HUGO_MODULES_VENDOR: "on"
+        run: hugo --minify
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
