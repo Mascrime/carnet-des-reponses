@@ -12,8 +12,8 @@ API_KEY = os.getenv("GEMINI_API_KEY")
 MODEL   = "gemini-2.5-flash"
 URL     = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent?key={API_KEY}"
 
-SYSTEM_PROMPT = """Tu es un éditeur. Tâches:
-1) Détecte si le contenu est trop personnel (noms privés, coordonnées, informations médicales/financières).
+SYSTEM_PROMPT = """Tu es un éditeur pour un mini-blog web. Tâches:
+1) Détecte si le contenu est trop personnel (noms privés, coordonnées, noms de mon entreprise, informations médicales/financières et/ou techniques liees a mon travail).
 2) Si personnel -> {"publishable": false} uniquement.
 3) Sinon, renvoie STRICTEMENT ce JSON:
 {
