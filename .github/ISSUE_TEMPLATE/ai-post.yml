@@ -1,0 +1,18 @@
+name: AI Post
+description: Colle la question/réponse à publier (le bot générera la page et l’index)
+title: "[AI-POST] <!-- Titre court ici -->"
+labels: ["publish"]
+body:
+  - type: textarea
+    id: content
+    attributes:
+      label: Contenu brut (question + réponse)
+      description: Colle ta question et la réponse AI ici.
+      placeholder: "Question...\nRéponse..."
+    validations:
+      required: true
+  - type: input
+    id: hint_tags
+    attributes:
+      label: Tags suggérés (optionnel, virgules)
+      placeholder: powerquery, productivité, santé
