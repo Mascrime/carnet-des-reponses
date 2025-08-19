@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Maîtriser Table.Buffer() et l'ordre de Load dans Power Query — Carnet des Réponses</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="../assets/style.css" />
+  <meta name="description" content="Découvrez l'impact de Table.Buffer() sur les performances de Power Query, comment le query folding optimise les requêtes et l'ordre réel d'exécution lors du chargement des données."/>
+</head>
+<body>
+  <main class="wrap">
+    <a class="back" href="../index.html">← Retour</a>
+    <h1>Maîtriser Table.Buffer() et l'ordre de Load dans Power Query</h1>
+    <p class="muted">Publié le 2025-08-19</p>
+    <article>
+      <p>Dans Power Query, comprendre l'impact de <code>Table.Buffer()</code> et l'ordre d'exécution des opérations est crucial pour optimiser vos transformations de données.</p>
+<p><strong>L'Impact de <code>Table.Buffer()</code></strong></p>
+<p><code>Table.Buffer()</code> est une fonction qui matérialise une table en mémoire à un état donné. Contrairement à l'évaluation paresseuse ("lazy evaluation") habituelle de Power Query, où les données ne sont chargées que si nécessaire, <code>Table.Buffer()</code> force un chargement immédiat.</p>
+<p>Son impact sur la performance varie :
+*   <strong>Accélération :</strong> Si la même table est lue ou si des opérations lourdes sont répétées plusieurs fois, <code>Table.Buffer()</code> évite des rechargements ou recalculs depuis la source.
+*   <strong>Ralentissement :</strong> Sur des tables très volumineuses ou des machines avec peu de RAM, le chargement complet en mémoire peut entraîner des erreurs. Pour des transformations simples et uniques, il est souvent inutile.
+*   <strong>Cassure du Query Folding :</strong> C'est un point clé. Si votre source supporte le "query folding" (SQL, OData, etc.), <code>Table.Buffer()</code> peut empêcher Power Query de "pousser" les filtres et transformations vers la source, forçant l'exécution locale. Cela peut être plus lent si le serveur est plus efficace.</p>
+<p>En règle générale, utilisez <code>Table.Buffer()</code> uniquement quand une table est réutilisée plusieurs fois, ou si la source est très lente et ne supporte pas le query folding. Évitez-le systématiquement pour ne pas gaspiller la RAM ou bloquer les optimisations côté source.</p>
+<p><strong>Query Folding et sources locales</strong></p>
+<p>Le "query folding" est la capacité de Power Query à traduire vos étapes de transformation en requêtes natives pour la source (ex: SQL). Le bénéfice est que la source effectue une partie du traitement, réduisant les données transférées et la RAM utilisée localement.</p>
+<p>Pour les sources locales comme Excel ou CSV, il n'y a pas de query folding au sens strict car il n'y a pas de langage de requête natif. Power Query doit lire le fichier entier et appliquer les étapes localement. Dans ce cas, <code>Table.Buffer()</code> ne "casse" pas le folding, mais il force un chargement complet en mémoire, potentiellement plus lourd que le traitement en flux (<code>streaming</code>) si vos étapes sont simples. Il reste utile si le même fichier doit être lu et transformé plusieurs fois dans différentes requêtes, pour éviter des relectures répétées.</p>
+<p><strong>L'Ordre des Opérations lors du Chargement (Load)</strong></p>
+<p>Quand vous déclenchez un "Load" (Apply Changes), le moteur de Power Query (moteur Mashup) ne suit pas toujours l'ordre exact affiché dans l'éditeur d'étapes. Il utilise l'évaluation paresseuse et un planificateur d'optimisation :</p>
+<ol>
+<li><strong>Query Folding :</strong> Les étapes pliables sont prioritaires et poussées vers la source dès que possible, même si cela réordonne les opérations.</li>
+<li><strong>Réduction des données :</strong> Même sans folding, le moteur tente de filtrer ou réduire le volume de données au plus tôt pour économiser la mémoire.</li>
+<li><strong>Dépendances :</strong> Les requêtes dépendantes sont évaluées dans l'ordre où leurs sources sont prêtes.</li>
+<li><strong>Parallélisation :</strong> Si plusieurs requêtes finales sont indépendantes, elles peuvent être traitées simultanément.</li>
+<li><strong>Exécution locale :</strong> Dès qu'une étape n'est pas pliable, toutes les étapes suivantes sont exécutées localement dans l'ordre défini dans l'éditeur.</li>
+</ol>
+<p><code>Table.Buffer()</code> agit comme un "point de synchronisation" qui fige la table à cet instant, affectant l'ordre d'exécution des étapes qui le précèdent et le suivent. Comprendre cet ordre est essentiel pour concevoir des requêtes Power Query performantes.</p>
+    </article>
+  </main>
+</body>
+</html>
