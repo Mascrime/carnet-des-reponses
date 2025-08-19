@@ -1,15 +1,14 @@
 baseURL = "https://Mascrime.github.io/carnet-des-reponses/"
-title   = "carnet-des-reponses"
+
+title   = "Carnet des Réponses"
 paginate = 10
-theme   = "github.com/theNewDynamic/gohugo-theme-ananke"  # module path
+
+# ← IMPORTANT : déclare Ananke comme MODULE (pas un dossier local)
+theme = ["github.com/theNewDynamic/gohugo-theme-ananke"]
 
 [params]
-  description = "AI Journal — Q/A éditées automatiquement"
+  description = "Q/R éditées automatiquement"
   show_reading_time = true
 
 [outputs]
   home = ["HTML","RSS","JSON"]
-
-[module]
-  [[module.imports]]
-    path = "github.com/theNewDynamic/gohugo-theme-ananke"
