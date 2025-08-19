@@ -1,0 +1,16 @@
+:root{--fg:#111;--muted:#666;--link:#0a58ca;--bg:#fff;--card:#f7f7f7}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu}
+.wrap{max-width:850px;margin:0 auto;padding:24px}
+header.wrap{padding-top:32px}
+h1{margin:0 0 6px 0;font-size:28px}
+.sub{margin:0;color:var(--muted)}
+h2{margin-top:24px}
+.posts{list-style:none;padding:0;margin:12px 0}
+.posts li{display:flex;justify-content:space-between;align-items:baseline;padding:10px 12px;border-radius:10px;background:var(--card);margin-bottom:8px}
+.posts a{text-decoration:none;color:var(--link);font-weight:600}
+.posts .date{color:var(--muted);font-size:14px;margin-left:12px;white-space:nowrap}
+.muted{color:var(--muted)}
+a{color:var(--link)}
+article{background:var(--card);padding:18px;border-radius:12px}
+.back{display:inline-block;margin:8px 0}
