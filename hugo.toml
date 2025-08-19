@@ -1,0 +1,15 @@
+baseURL = "https://Mascrime.github.io/carnet-des-reponses/"
+title   = "carnet-des-reponses"
+paginate = 10
+theme   = "github.com/theNewDynamic/gohugo-theme-ananke"  # module path
+
+[params]
+  description = "AI Journal — Q/A éditées automatiquement"
+  show_reading_time = true
+
+[outputs]
+  home = ["HTML","RSS","JSON"]
+
+[module]
+  [[module.imports]]
+    path = "github.com/theNewDynamic/gohugo-theme-ananke"
